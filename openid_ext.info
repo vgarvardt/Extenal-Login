@@ -1,0 +1,7 @@
+; $Id$
+name = "OpenID Extensions"
+description = "Usability extensions for OpenID."
+dependencies[] = openid
+package = Users
+core = 6.x
+version = 6.x-1.0
