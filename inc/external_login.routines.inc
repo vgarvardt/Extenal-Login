@@ -3,25 +3,25 @@
 
 /**
  * @file
- * OpenID Extension helper routines.
+ * External Login helper routines.
  */
 
 /**
- * Gets available OpenID Extensions providers list.
+ * Gets available External Login providers list.
  *
  * @param $only_enabled
  *   Return only enabled providers or all
  * @return
  *   Array of available providers
  */
-function openid_ext_get_providers($only_enabled = TRUE) {
+function external_login_get_providers($only_enabled = TRUE) {
   static $all_providers = array();
   static $enabled_providers = array();
 
   if (!$all_providers) {
-    $all_providers = module_invoke_all('openid_providers');
+    $all_providers = module_invoke_all('external_login_providers');
 
-    $enabled = variable_get('openid_ext_enabled_providers', array('openid' => 0));
+    $enabled = variable_get('external_login_enabled_providers', array('openid' => 0));
     foreach ($enabled as $pname => $weight) {
       if (isset($all_providers[$pname])) {
         $enabled_providers[$pname] = $all_providers[$pname];
@@ -33,31 +33,31 @@ function openid_ext_get_providers($only_enabled = TRUE) {
 }
 
 /**
- * Gets available OpenID Extensions themes list.
+ * Gets available External Login themes list.
  *
  * @return
  *   Array of themes
  */
-function openid_ext_get_themes() {
+function external_login_get_themes() {
   static $themes = array();
 
   if (!$themes) {
-    $themes = module_invoke_all('openid_themes');
+    $themes = module_invoke_all('external_login_themes');
   }
 
   return $themes;
 }
 
 /**
- * Try to get valid Username from OpenID identifier.
+ * Try to get valid Username from external identifier.
  *
  * @param $openid_username
- *   OpenID identifier returned from provider
+ *   External identifier returned from provider
  * @return
  *   Valid Username of FALSE if failed to normalize
  */
-function openid_ext_normalize_username($openid_username) {
-  foreach (openid_ext_get_providers() as $pname => $data) {
+function external_login_normalize_username($openid_username) {
+  foreach (external_login_get_providers() as $pname => $data) {
     $hook = 'normalize_' . $pname;
     foreach (module_implements($hook) as $module) {
       $function = $module . '_' . $hook;
@@ -69,17 +69,17 @@ function openid_ext_normalize_username($openid_username) {
 }
 
 /**
- * Helper function for creating OpenID Extensions CSS cache.
+ * Helper function for creating External Login CSS cache.
  *
  * @param $styles
  *   Array with styles.
  * @param $cache_css
  *   CSS cache file path.
  */
-function openid_ext_write_cache_styles($styles, $cache_css) {
+function external_login_write_cache_styles($styles, $cache_css) {
   $fp = fopen($cache_css, 'w');
   foreach ($styles as $selector => $style) {
-    fwrite($fp, sprintf("#openid-ext-block-form %s { %s }\r\n", $selector, $style));
+    fwrite($fp, sprintf("#external-login-block-form %s { %s }\r\n", $selector, $style));
   }
   fclose($fp);
 }
@@ -90,11 +90,11 @@ function openid_ext_write_cache_styles($styles, $cache_css) {
  * @return
  *   Array with proper cache IDs.
  */
-function openid_ext_get_cids() {
+function external_login_get_cids() {
   global $language;
   $lang_code = ($language ? $language->language : 'na');
-  $cache_html_cid = 'openid_ext:themed_block_form:' . $lang_code;
-  $cache_settings_cid = 'openid_ext:themed_block_settings:' . $lang_code;
+  $cache_html_cid = 'external_login:themed_block_form:' . $lang_code;
+  $cache_settings_cid = 'external_login:themed_block_settings:' . $lang_code;
 
   return array($cache_html_cid, $cache_settings_cid);
 }
@@ -112,10 +112,10 @@ function openid_ext_get_cids() {
  *   - Settings cache
  *   - Cached theme css path
  */
-function openid_ext_get_cache_values($cache_html_cid, $cache_settings_cid) {
+function external_login_get_cache_values($cache_html_cid, $cache_settings_cid) {
   $cache_html = cache_get($cache_html_cid);
   $cache_settings = cache_get($cache_settings_cid);
-  $cache_css = file_directory_path() . '/openid_ext.providers.css';
+  $cache_css = file_directory_path() . '/external_login.providers.css';
 
   return array($cache_html, $cache_settings, $cache_css);
 }

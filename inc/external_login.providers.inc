@@ -3,7 +3,7 @@
 
 /**
  * @file
- * OpenID Extension core routines.
+ * External Login core routines.
  */
 
 /**
@@ -22,22 +22,22 @@
  *   - icon - OpenID provider logo icon, path relative to Drupal installation root
  *   - verify (optional) - function to verify if provider is supported in your system
  */
-function openid_ext_openid_providers() {
-  $files_path = drupal_get_path('module', 'openid_ext') . '/files/';
+function external_login_openid_providers() {
+  $files_path = drupal_get_path('module', 'external_login') . '/files/';
 
   return array(
     'openid' => array(
       'short' => t('Any OpenID'),
       'title' => t('OpenID Provider'),
       'input' => t('Identifier'),
-      'path' => 'openid_ext_provider_openid',
+      'path' => 'external_login_provider_openid',
       'icon' => $files_path . 'openid.png',
     ),
     'livejournal' => array(
       'short' => t('LiveJournal'),
       'title' => t('LiveJournal User'),
       'input' => t('Username'),
-      'path' => 'openid_ext_provider_livejournal',
+      'path' => 'external_login_provider_livejournal',
       'icon' => $files_path . 'livejournal.png',
     ),
     'yandex' => array(
@@ -57,7 +57,7 @@ function openid_ext_openid_providers() {
       'title' => t('Google User'),
       'path' => 'https://www.google.com/accounts/o8/id',
       'icon' => $files_path . 'google.png',
-      'verify' => 'openid_ext_verify_openssl',
+      'verify' => 'external_login_verify_openssl',
     ),
     'yahoo' => array(
       'short' => t('Yahoo!'),
@@ -69,15 +69,15 @@ function openid_ext_openid_providers() {
       'short' => t('Chi.mp'),
       'title' => t('Chi.mp User'),
       'input' => t('Your name'),
-      'path' => 'openid_ext_provider_chimp',
+      'path' => 'external_login_provider_chimp',
       'icon' => $files_path . 'chimp.png',
-      'verify' => 'openid_ext_verify_openssl',
+      'verify' => 'external_login_verify_openssl',
     ),
     'myopenid' => array(
       'short' => t('myOpenID'),
       'title' => t('myOpenID User'),
       'input' => t('Username'),
-      'path' => 'openid_ext_provider_myopenid',
+      'path' => 'external_login_provider_myopenid',
       'icon' => $files_path . 'myopenid.png',
     ),
   );
@@ -89,11 +89,11 @@ function openid_ext_openid_providers() {
  * @return
  *   Assoc array with theme name from hook_theme() as key and theme title as value.
  */
-function openid_ext_openid_themes() {
+function external_login_openid_themes() {
   return array(
-      'openid_ext_default' => t('Default'),
-      'openid_ext_dropdown' => t('Dropdown'),
-      'openid_ext_accordion' => t('Accordion'),
+      'external_login_default' => t('Default'),
+      'external_login_dropdown' => t('Dropdown'),
+      'external_login_accordion' => t('Accordion'),
   );
 }
 
@@ -105,7 +105,7 @@ function openid_ext_openid_themes() {
  * @return
  *   Provider URL.
  */
-function openid_ext_provider_openid($input_value) {
+function external_login_provider_openid($input_value) {
   // We already validated if identifier is valid URL so return it as is
   return $input_value;
 }
@@ -118,7 +118,7 @@ function openid_ext_provider_openid($input_value) {
  * @return
  *   Error text, if value is valid.
  */
-function openid_ext_provider_openid_validate($input_value) {
+function external_login_provider_openid_validate($input_value) {
   // both absolute url and domain name are valid urls for OpenID module
   if (!valid_url($input_value, TRUE) && !valid_url('http://' . $input_value, TRUE)) {
     return t('OpenID identifier should be valid URL');
@@ -133,7 +133,7 @@ function openid_ext_provider_openid_validate($input_value) {
  * @return
  *   Provider URL.
  */
-function openid_ext_provider_livejournal($input_value) {
+function external_login_provider_livejournal($input_value) {
   return 'http://' . $input_value . '.livejournal.com';
 }
 
@@ -145,8 +145,8 @@ function openid_ext_provider_livejournal($input_value) {
  * @return
  *   Error text, if value is valid.
  */
-function openid_ext_provider_livejournal_validate($input_value) {
-  $lj_url = openid_ext_provider_livejournal($input_value);
+function external_login_provider_livejournal_validate($input_value) {
+  $lj_url = external_login_provider_livejournal($input_value);
   if (!valid_url($lj_url, TRUE)) {
     return t('LiveJournal username should be part of your LJ account (e.g. "dkrig" if your LJ address is "dkrig.livejournal.com")');
   }
@@ -160,7 +160,7 @@ function openid_ext_provider_livejournal_validate($input_value) {
  * @return
  *   Provider URL.
  */
-function openid_ext_provider_chimp($input_value) {
+function external_login_provider_chimp($input_value) {
   return 'https://' . $input_value . '.mp';
 }
 
@@ -172,8 +172,8 @@ function openid_ext_provider_chimp($input_value) {
  * @return
  *   Error text, if value is valid.
  */
-function openid_ext_provider_chimp_validate($input_value) {
-  $chimp_url = openid_ext_provider_chimp($input_value);
+function external_login_provider_chimp_validate($input_value) {
+  $chimp_url = external_login_provider_chimp($input_value);
   if (!valid_url($chimp_url, TRUE)) {
     return t('Chi.mp name should be part of your .mp account (e.g. "bob" if your domain is "bob.mp")');
   }
@@ -187,7 +187,7 @@ function openid_ext_provider_chimp_validate($input_value) {
  * @return
  *   Provider URL.
  */
-function openid_ext_provider_myopenid($input_value) {
+function external_login_provider_myopenid($input_value) {
   return 'http://' . $input_value . '.myopenid.com';
 }
 
@@ -199,8 +199,8 @@ function openid_ext_provider_myopenid($input_value) {
  * @return
  *   Error text, if value is valid.
  */
-function openid_ext_provider_myopenid_validate($input_value) {
-  $myopenid_url = openid_ext_provider_myopenid($input_value);
+function external_login_provider_myopenid_validate($input_value) {
+  $myopenid_url = external_login_provider_myopenid($input_value);
   if (!valid_url($myopenid_url, TRUE)) {
     return t('myOpenID user should be part of your myOpenID account (e.g. "krig" if your domain is "krig.myopenid.com")');
   }
@@ -217,7 +217,7 @@ function openid_ext_provider_myopenid_validate($input_value) {
  * @return
  *   Normalized username if possible or FALSE if not
  */
-function openid_ext_normalize_livejournal($value) {
+function external_login_normalize_livejournal($value) {
   if (preg_match('#http:\/\/(.*)\.livejournal\.com#', $value, $matches)) {
     return $matches[1];
   }
@@ -235,7 +235,7 @@ function openid_ext_normalize_livejournal($value) {
  * @return
  *   Normalized username if possible or FALSE if not
  */
-function openid_ext_normalize_yandex($value) {
+function external_login_normalize_yandex($value) {
   if (preg_match('#http:\/\/openid\.yandex\.ru\/(.*)\/#', $value, $matches)) {
     return $matches[1];
   }
@@ -251,7 +251,7 @@ function openid_ext_normalize_yandex($value) {
  * @return
  *   Error text if verification fails, NULL otherwise
  */
-function openid_ext_verify_openssl() {
+function external_login_verify_openssl() {
   if (!function_exists('openssl_open')) {
     return t('OpenSSL is not installed.');
   }

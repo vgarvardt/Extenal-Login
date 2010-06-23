@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Template for OpenID Extensions Accordion theme item.
+ * Template for External Login theme item.
  */
 
 /**

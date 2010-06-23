@@ -3,34 +3,34 @@
 
 /**
  * @file
- * OpenID Extension themes implementations.
+ * External Login themes implementations.
  */
 
-function theme_openid_ext_admin_list_prepare($form) {
-  $providers = openid_ext_get_providers(FALSE);
-  $enabled = openid_ext_get_providers();
+function theme_external_login_admin_list_prepare($form) {
+  $providers = external_login_get_providers(FALSE);
+  $enabled = external_login_get_providers();
   $prv_enabled = $prv_disabled = array();
   foreach ($enabled as $pname => $weight) {
-    _theme_openid_ext_admin_list_sort_row($pname, &$form, &$prv_enabled, &$prv_disabled);
+    _theme_external_login_admin_list_sort_row($pname, &$form, &$prv_enabled, &$prv_disabled);
     unset($providers[$pname]);
   }
   foreach ($providers as $pname => $data) {
-    _theme_openid_ext_admin_list_sort_row($pname, &$form, &$prv_enabled, &$prv_disabled);
+    _theme_external_login_admin_list_sort_row($pname, &$form, &$prv_enabled, &$prv_disabled);
   }
 
   $regions = array('yes' => t('Enabled'), 'no' => t('Disabled'));
   $providers = array('yes' => $prv_enabled, 'no' => $prv_disabled);
   $rest_elemnts = drupal_render($form);
 
-  drupal_add_css(drupal_get_path('module', 'openid_ext') .'/files/openid_ext.css');
-  return theme('openid_ext_admin_list', $regions, $providers, $rest_elemnts);
+  drupal_add_css(drupal_get_path('module', 'external_login') .'/files/external_login.css');
+  return theme('external_login_admin_list', $regions, $providers, $rest_elemnts);
 }
 
-function _theme_openid_ext_admin_list_sort_row($pname, &$form, &$prv_enabled, &$prv_disabled) {
+function _theme_external_login_admin_list_sort_row($pname, &$form, &$prv_enabled, &$prv_disabled) {
   $key = 'openid_provider_' . $pname;
   if (isset($form[$key])) {
-    $form[$key]['enabled']['#attributes']['class'] = 'openid_provider-region-select openid_provider-region-enabled-' . $form[$key]['enabled']['#default_value'];
-    $form[$key]['weight']['#attributes']['class'] = 'openid_provider-weight openid_provider-weight-enabled-' . $form[$key]['enabled']['#default_value'];
+    $form[$key]['enabled']['#attributes']['class'] = 'external_login_provider-region-select external_login_provider-region-enabled-' . $form[$key]['enabled']['#default_value'];
+    $form[$key]['weight']['#attributes']['class'] = 'external_login_provider-weight external_login_provider-weight-enabled-' . $form[$key]['enabled']['#default_value'];
 
     $obj = new stdClass();
     $obj->title = drupal_render($form[$key]['info']);
@@ -46,17 +46,17 @@ function _theme_openid_ext_admin_list_sort_row($pname, &$form, &$prv_enabled, &$
   }
 }
 
-function theme_openid_ext_default($form) {
-  list($cache_html_cid, $cache_settings_cid) = openid_ext_get_cids();
-  list($cache_html, $cache_settings, $cache_css) = openid_ext_get_cache_values($cache_html_cid, $cache_settings_cid);
+function theme_external_login_default($form) {
+  list($cache_html_cid, $cache_settings_cid) = external_login_get_cids();
+  list($cache_html, $cache_settings, $cache_css) = external_login_get_cache_values($cache_html_cid, $cache_settings_cid);
 
   if (!$cache_html || !$cache_settings || !is_file($cache_css)) {
     global $base_url;
 
     $styles = array();
     $settings = array();
-    $providers = openid_ext_get_providers();
-    
+    $providers = external_login_get_providers();
+
     foreach ($form['provider']['#options'] as $pname => $title) {
       if (isset($providers[$pname]['icon']) && is_file($providers[$pname]['icon'])) {
         $styles['.with-icon'] = 'background-repeat:no-repeat;padding-left:17px;';
@@ -74,30 +74,30 @@ function theme_openid_ext_default($form) {
     // cache all required data
     cache_set($cache_html_cid, $out);
     cache_set($cache_settings_cid, $settings);
-    openid_ext_write_cache_styles($styles, $cache_css);
+    external_login_write_cache_styles($styles, $cache_css);
   } else {
     $out = $cache_html->data;
     $settings = $cache_settings->data;
   }
 
   // using _default for setting because default is reserved JS word
-  drupal_add_js(array('openid_ext' => array('_default' => $settings)), 'setting');
-  drupal_add_js(drupal_get_path('module', 'openid_ext') . '/files/openid_ext.js');
+  drupal_add_js(array('external_login' => array('_default' => $settings)), 'setting');
+  drupal_add_js(drupal_get_path('module', 'external_login') . '/files/external_login.js');
   drupal_add_css($cache_css);
 
   return $out;
 }
 
-function theme_openid_ext_dropdown($form) {
-  list($cache_html_cid, $cache_settings_cid) = openid_ext_get_cids();
-  list($cache_html, $cache_settings, $cache_css) = openid_ext_get_cache_values($cache_html_cid, $cache_settings_cid);
+function theme_external_login_dropdown($form) {
+  list($cache_html_cid, $cache_settings_cid) = external_login_get_cids();
+  list($cache_html, $cache_settings, $cache_css) = external_login_get_cache_values($cache_html_cid, $cache_settings_cid);
 
   if (!$cache_html || !$cache_settings || !is_file($cache_css)) {
     global $base_url;
 
     $styles = array();
     $settings = array();
-    $providers = openid_ext_get_providers();
+    $providers = external_login_get_providers();
 
     $def_val = FALSE;
     if (isset($form['provider']['#default_value']) && isset($providers[$form['provider']['#default_value']]['input'])) {
@@ -151,36 +151,36 @@ function theme_openid_ext_dropdown($form) {
     // cache all required data
     cache_set($cache_html_cid, $out);
     cache_set($cache_settings_cid, $settings);
-    openid_ext_write_cache_styles($styles, $cache_css);
+    external_login_write_cache_styles($styles, $cache_css);
   }
   else {
     $out = $cache_html->data;
     $settings = $cache_settings->data;
   }
 
-  drupal_add_js(array('openid_ext' => array('dropdown' => $settings)), 'setting');
-  drupal_add_js(drupal_get_path('module', 'openid_ext') . '/files/openid_ext.js');
+  drupal_add_js(array('external_login' => array('dropdown' => $settings)), 'setting');
+  drupal_add_js(drupal_get_path('module', 'external_login') . '/files/external_login.js');
   drupal_add_css($cache_css);
 
   return $out;
 }
 
-function theme_openid_ext_accordion($form) {
-  list($cache_html_cid, $cache_settings_cid) = openid_ext_get_cids();
-  list($cache_html, $cache_settings, $cache_css) = openid_ext_get_cache_values($cache_html_cid, $cache_settings_cid);
+function theme_external_login_accordion($form) {
+  list($cache_html_cid, $cache_settings_cid) = external_login_get_cids();
+  list($cache_html, $cache_settings, $cache_css) = external_login_get_cache_values($cache_html_cid, $cache_settings_cid);
 
   if (!$cache_html || !$cache_settings || !is_file($cache_css)) {
     global $base_url;
 
     $styles = array();
     $settings = array();
-    $providers = openid_ext_get_providers();
-    $files_path = $base_url . '/' . drupal_get_path('module', 'openid_ext') . '/files/';
-    $settings['container_id'] = 'openid_ext_accordion_container';
+    $providers = external_login_get_providers();
+    $files_path = $base_url . '/' . drupal_get_path('module', 'external_login') . '/files/';
+    $settings['container_id'] = 'external_login_accordion_container';
 
     $items = array();
     foreach ($form['provider']['#options'] as $pname => $title) {
-      $items[] = theme('openid_ext_accordion_item', $pname, $title);
+      $items[] = theme('external_login_accordion_item', $pname, $title);
 
       $styles['.' . $pname] = 'background-image:url(' . $base_url . '/' . $providers[$pname]['icon'] . ');';
 
@@ -219,15 +219,15 @@ function theme_openid_ext_accordion($form) {
     // cache all required data
     cache_set($cache_html_cid, $out);
     cache_set($cache_settings_cid, $settings);
-    openid_ext_write_cache_styles($styles, $cache_css);
+    external_login_write_cache_styles($styles, $cache_css);
   }
   else {
     $out = $cache_html->data;
     $settings = $cache_settings->data;
   }
 
-  drupal_add_js(array('openid_ext' => array('accordion' => $settings)), 'setting');
-  drupal_add_js(drupal_get_path('module', 'openid_ext') . '/files/openid_ext.js');
+  drupal_add_js(array('external_login' => array('accordion' => $settings)), 'setting');
+  drupal_add_js(drupal_get_path('module', 'external_login') . '/files/external_login.js');
   drupal_add_css($cache_css);
 
   return $out;

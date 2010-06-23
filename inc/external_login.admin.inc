@@ -3,17 +3,17 @@
 
 /**
  * @file
- * Administration routines for OpenID Extension module.
+ * Administration routines for External Login module.
  */
 
 function openid_ext_settings_providers() {
-  $all_providers = openid_ext_get_providers(FALSE);
-  $enb_providers = openid_ext_get_providers(TRUE);
+  $all_providers = external_login_get_providers(FALSE);
+  $enb_providers = external_login_get_providers(TRUE);
   $options = array();
   foreach ($enb_providers as $provider => $data) {
     $options[$provider] = $data['short'];
   }
-  $weights = variable_get('openid_ext_enabled_providers', array('openid' => 0));
+  $weights = variable_get('external_login_enabled_providers', array('openid' => 0));
   $weight_delta = round(count($all_providers) / 2);
 
   $form = array('#tree' => TRUE);
@@ -32,7 +32,7 @@ function openid_ext_settings_providers() {
       }
     }
 
-    $key = 'openid_provider_' . $pname;
+    $key = 'external_login_provider_' . $pname;
     $form[$key]['info'] = array(
       '#value' => $data['short']
     );
@@ -61,52 +61,52 @@ function openid_ext_settings_providers() {
     '#value' => t('Save'),
   );
 
-  $form['#theme'] = 'openid_ext_admin_list_prepare';
+  $form['#theme'] = 'external_login_admin_list_prepare';
 
   return $form;
 }
 
-function openid_ext_settings_providers_validate($form, &$form_state) {
-  $all_providers = openid_ext_get_providers(FALSE);
+function external_login_settings_providers_validate($form, &$form_state) {
+  $all_providers = external_login_get_providers(FALSE);
   foreach ($all_providers as $pname => $data) {
-    $key = 'openid_provider_' . $pname;
+    $key = 'external_login_provider_' . $pname;
     if ($form_state['values'][$key]['enabled'] == 'yes') return;
   }
-  form_set_error('openid_provider_openid', t('At least one provider should be enabled.'));
+  form_set_error('external_login_provider_openid', t('At least one provider should be enabled.'));
 }
 
-function openid_ext_settings_providers_submit($form, &$form_state) {
-  $all_providers = openid_ext_get_providers(FALSE);
+function external_login_settings_providers_submit($form, &$form_state) {
+  $all_providers = external_login_get_providers(FALSE);
   $enabled = array();
   foreach ($all_providers as $pname => $data) {
-    $key = 'openid_provider_' . $pname;
+    $key = 'external_login_provider_' . $pname;
     if ($form_state['values'][$key]['enabled'] == 'yes') {
       $enabled[$pname] = $form_state['values'][$key]['weight'];
     }
   }
   asort($enabled);
-  variable_set('openid_ext_enabled_providers', $enabled);
+  variable_set('external_login_enabled_providers', $enabled);
   // reset all module cache so forms should be rebuilt on first call
-  cache_clear_all('openid_ext:', 'cache', TRUE);
+  cache_clear_all('external_login:', 'cache', TRUE);
 }
 
-function openid_ext_settings_themes() {
+function external_login_settings_themes() {
   $form = array();
 
-  $form['openid_ext_theme'] = array(
+  $form['external_login_theme'] = array(
     '#type' => 'radios',
     '#title' => t('Theme'),
     '#required' => TRUE,
-    '#options' => openid_ext_get_themes(),
-    '#default_value' => variable_get('openid_ext_theme', 'openid_ext_default'),
+    '#options' => external_login_get_themes(),
+    '#default_value' => variable_get('external_login_theme', 'external_login_default'),
   );
 
-  $form['#submit'][] = 'openid_ext_settings_themes_submit';
+  $form['#submit'][] = 'external_login_settings_themes_submit';
 
   return system_settings_form($form);
 }
 
-function openid_ext_settings_themes_submit($form, &$form_state) {
+function external_login_settings_themes_submit($form, &$form_state) {
   // reset all module cache so forms should be rebuilt on first call
-  cache_clear_all('openid_ext:', 'cache', TRUE);
+  cache_clear_all('external_login:', 'cache', TRUE);
 }

@@ -6,9 +6,9 @@
  * This behavior is dependent on the tableDrag behavior, since it uses the
  * objects initialized in that behavior to update the row.
  */
-Drupal.behaviors.openid_providers_drag = function(context) {
-  var table = $('table#openid_providers');
-  var tableDrag = Drupal.tableDrag.openid_providers; // Get the blocks tableDrag object.
+Drupal.behaviors.external_login_providers_drag = function(context) {
+  var table = $('table#external_login_providers');
+  var tableDrag = Drupal.tableDrag.external_login_providers; // Get the blocks tableDrag object.
 
   // Add a handler for when a row is swapped, update empty regions.
   tableDrag.row.prototype.onSwap = function(swappedRow) {
@@ -21,20 +21,20 @@ Drupal.behaviors.openid_providers_drag = function(context) {
     if ($(dragObject.rowObject.element).prev('tr').is('.region-message')) {
       var regionRow = $(dragObject.rowObject.element).prev('tr').get(0);
       var regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
-      var regionField = $('select.openid_provider-region-select', dragObject.rowObject.element);
-      var weightField = $('select.openid_provider-weight', dragObject.rowObject.element);
+      var regionField = $('select.external_login_provider-region-select', dragObject.rowObject.element);
+      var weightField = $('select.external_login_provider-weight', dragObject.rowObject.element);
       var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*openid_provider-weight-enabled-([^ ]+)([ ]+[^ ]+)*/, '$2');
 
-      if (!regionField.is('.openid_provider-region-' + regionName)) {
-        regionField.removeClass('openid_provider-region-enabled-' + oldRegionName).addClass('openid_provider-region-enabled-' + regionName);
-        weightField.removeClass('openid_provider-weight-enabled-' + oldRegionName).addClass('openid_provider-weight-enabled-' + regionName);
+      if (!regionField.is('.external_login_provider-region-' + regionName)) {
+        regionField.removeClass('external_login_provider-region-enabled-' + oldRegionName).addClass('external_login_provider-region-enabled-' + regionName);
+        weightField.removeClass('external_login_provider-weight-enabled-' + oldRegionName).addClass('external_login_provider-weight-enabled-' + regionName);
         regionField.val(regionName);
       }
     }
   };
 
   // Add the behavior to each state select list.
-  $('select.openid_provider-region-select:not(.openid_providerregionselect-processed)', context).each(function() {
+  $('select.external_login_provider-region-select:not(.external_login_providerregionselect-processed)', context).each(function() {
     $(this).change(function(event) {
       // Make our new row and select field.
       var row = $(this).parents('tr:first');
@@ -65,7 +65,7 @@ Drupal.behaviors.openid_providers_drag = function(context) {
       // Remove focus from selectbox.
       select.get(0).blur();
     });
-    $(this).addClass('openid_providerregionselect-processed');
+    $(this).addClass('external_login_providerregionselect-processed');
   });
 
   var checkEmptyRegions = function(table, rowObject) {
