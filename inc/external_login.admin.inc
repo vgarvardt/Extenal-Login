@@ -6,7 +6,7 @@
  * Administration routines for External Login module.
  */
 
-function openid_ext_settings_providers() {
+function external_login_settings_providers() {
   $all_providers = external_login_get_providers(FALSE);
   $enb_providers = external_login_get_providers(TRUE);
   $options = array();
