@@ -27,7 +27,7 @@ function theme_external_login_admin_list_prepare($form) {
 }
 
 function _theme_external_login_admin_list_sort_row($pname, &$form, &$prv_enabled, &$prv_disabled) {
-  $key = 'openid_provider_' . $pname;
+  $key = 'external_login_provider_' . $pname;
   if (isset($form[$key])) {
     $form[$key]['enabled']['#attributes']['class'] = 'external_login_provider-region-select external_login_provider-region-enabled-' . $form[$key]['enabled']['#default_value'];
     $form[$key]['weight']['#attributes']['class'] = 'external_login_provider-weight external_login_provider-weight-enabled-' . $form[$key]['enabled']['#default_value'];

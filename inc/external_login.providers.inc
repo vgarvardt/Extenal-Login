@@ -22,7 +22,7 @@
  *   - icon - OpenID provider logo icon, path relative to Drupal installation root
  *   - verify (optional) - function to verify if provider is supported in your system
  */
-function external_login_openid_providers() {
+function external_login_external_login_providers() {
   $files_path = drupal_get_path('module', 'external_login') . '/files/';
 
   return array(
@@ -89,7 +89,7 @@ function external_login_openid_providers() {
  * @return
  *   Assoc array with theme name from hook_theme() as key and theme title as value.
  */
-function external_login_openid_themes() {
+function external_login_external_login_themes() {
   return array(
       'external_login_default' => t('Default'),
       'external_login_dropdown' => t('Dropdown'),

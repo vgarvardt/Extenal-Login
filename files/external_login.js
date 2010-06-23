@@ -5,8 +5,8 @@
  */
 Drupal.behaviors.external_login_usability = function() {
   // if current theme is Dropdown or Default it should have some settings
-  if (Drupal.settings.openid_ext._default || Drupal.settings.openid_ext.dropdown) {
-    if (Drupal.settings.openid_ext._default) {
+  if (Drupal.settings.external_login._default || Drupal.settings.external_login.dropdown) {
+    if (Drupal.settings.external_login._default) {
       var settings = Drupal.settings.external_login._default;
     }
     else {
@@ -51,7 +51,7 @@ Drupal.behaviors.external_login_usability = function() {
             el.removeClass('accordion-content-active').slideUp('normal');
             el.parents('li:first').css('list-style', Drupal.settings.external_login.accordion.list_style);
           });
-          list_element.css('list-style', Drupal.settings.openid_ext.accordion.list_style_active);
+          list_element.css('list-style', Drupal.settings.external_login.accordion.list_style_active);
 
           var new_provider = $(this).attr('class');
 

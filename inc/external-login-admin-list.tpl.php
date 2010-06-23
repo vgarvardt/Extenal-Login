@@ -23,7 +23,7 @@ drupal_add_js('misc/tableheader.js');
 drupal_add_js(drupal_get_path('module', 'external_login') .'/files/external_login.admin.js');
 foreach ($regions as $region => $title) {
   drupal_add_tabledrag('external_login_providers', 'match', 'sibling', 'external_login_provider-region-select', 'external_login_provider-region-enabled-' . $region, NULL, FALSE);
-  drupal_add_tabledrag('oexternal_login_providers', 'order', 'sibling', 'external_login_provider-weight', 'external_login_provider-weight-enabled-' . $region);
+  drupal_add_tabledrag('external_login_providers', 'order', 'sibling', 'external_login_provider-weight', 'external_login_provider-weight-enabled-' . $region);
 }
 ?>
 <table id="external_login_providers" class="sticky-enabled">

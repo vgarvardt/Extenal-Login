@@ -12,7 +12,8 @@
 #external-login-block-form #edit-input.dropdown,
 #external-login-block-form #edit-provider.dropdown option {
   padding-left: 18px;
-  background: no-repeat left center;
+  background-repeat: no-repeat;
+  background-position: left center;
 }
 
 #external-login-block-form .external-login-info {
