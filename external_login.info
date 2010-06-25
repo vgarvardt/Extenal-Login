@@ -1,7 +1,6 @@
 ; $Id$
 name = "External Login"
 description = "Usability extensions for OpenID, Facebook, VKontakte, etc."
-dependencies[] = openid
 package = Users
 core = 6.x
 version = 6.x-1.x-dev

@@ -20,7 +20,7 @@
  *     function should be implemented also - {path}_validate - which takes input value
  *     as parameter and returns error text if value is not valid
  *   - icon - OpenID provider logo icon, path relative to Drupal installation root
- *   - verify (optional) - function to verify if provider is supported in your system
+ *   - verify (optional) - array of function names to verify if provider is supported in your system
  */
 function external_login_external_login_providers() {
   $files_path = drupal_get_path('module', 'external_login') . '/files/';
@@ -32,6 +32,7 @@ function external_login_external_login_providers() {
       'input' => t('Identifier'),
       'path' => 'external_login_provider_openid',
       'icon' => $files_path . 'openid.png',
+      'verify' => array('external_login_verify_openid'),
     ),
     'livejournal' => array(
       'short' => t('LiveJournal'),
@@ -39,31 +40,35 @@ function external_login_external_login_providers() {
       'input' => t('Username'),
       'path' => 'external_login_provider_livejournal',
       'icon' => $files_path . 'livejournal.png',
+      'verify' => array('external_login_verify_openid'),
     ),
     'yandex' => array(
       'short' => t('Yandex'),
       'title' => t('Yandex User'),
       'path' => 'http://yandex.ru',
       'icon' => $files_path . 'yandex.png',
+      'verify' => array('external_login_verify_openid'),
     ),
     'rambler' => array(
       'short' => t('Rambler'),
       'title' => t('Rambler User'),
       'path' => 'http://rambler.ru',
       'icon' => $files_path . 'rambler.png',
+      'verify' => array('external_login_verify_openid'),
     ),
     'google' => array(
       'short' => t('Google'),
       'title' => t('Google User'),
       'path' => 'https://www.google.com/accounts/o8/id',
       'icon' => $files_path . 'google.png',
-      'verify' => 'external_login_verify_openssl',
+      'verify' => array('external_login_verify_openid','external_login_verify_openssl'),
     ),
     'yahoo' => array(
       'short' => t('Yahoo!'),
       'title' => t('Yahoo! User'),
       'path' => 'http://www.yahoo.com',
       'icon' => $files_path . 'yahoo.png',
+      'verify' => array('external_login_verify_openid'),
     ),
     'chimp' => array(
       'short' => t('Chi.mp'),
@@ -71,7 +76,7 @@ function external_login_external_login_providers() {
       'input' => t('Your name'),
       'path' => 'external_login_provider_chimp',
       'icon' => $files_path . 'chimp.png',
-      'verify' => 'external_login_verify_openssl',
+      'verify' => array('external_login_verify_openid','external_login_verify_openssl'),
     ),
     'myopenid' => array(
       'short' => t('myOpenID'),
@@ -79,6 +84,7 @@ function external_login_external_login_providers() {
       'input' => t('Username'),
       'path' => 'external_login_provider_myopenid',
       'icon' => $files_path . 'myopenid.png',
+      'verify' => array('external_login_verify_openid'),
     ),
   );
 }
@@ -254,5 +260,17 @@ function external_login_normalize_yandex($value) {
 function external_login_verify_openssl() {
   if (!function_exists('openssl_open')) {
     return t('OpenSSL is not installed.');
+  }
+}
+
+/**
+ * Checks if OpenID module enabled.
+ *
+ * @return
+ *   Error text if verification fails, NULL otherwise
+ */
+function external_login_verify_openid() {
+  if (!module_exists('openid')) {
+    return t('OpenID module is not installed.');
   }
 }

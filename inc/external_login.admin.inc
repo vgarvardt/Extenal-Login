@@ -21,13 +21,18 @@ function external_login_settings_providers() {
   $na_providers = array();
   foreach ($all_providers as $pname => $data) {
     // if provider has verification function lets execute it and check if the provider is available now
-    if (isset($data['verify'])) {
-      $function = $data['verify'];
-      $error_message = $function();
+    if (!empty($data['verify'])) {
+      $error_messages = array();
+      foreach ($data['verify'] as $function) {
+        $error_message = $function();
+        if (!empty($error_message)) {
+          $error_messages[] = $error_message;
+        }
+      }
       // if provider is not available - remember provider name, the reason and skip it
       // information about N/A providers will be rendered in the end of the form
-      if ($error_message) {
-        $na_providers[] = '<strong>' . $data['short'] . '</strong>: ' . $error_message;
+      if (!empty($error_messages)) {
+        $na_providers[$data['short']] = $error_messages;
         continue;
       }
     }
@@ -48,15 +53,20 @@ function external_login_settings_providers() {
     );
   }
 
-  if ($na_providers) {
+  if (!empty($na_providers)) {
+    $errors = array();
+    foreach ($na_providers as $provider => $provider_errors) {
+      $errors[] = theme('item_list', $provider_errors, $provider);
+    }
+
     $form['na_providers'] = array(
       '#type' => 'item',
       '#title' => t('N/A providers'),
-      '#value' => theme('item_list', $na_providers),
+      '#value' => theme('item_list', $errors),
     );
   }
 
-  $form['op'] = array(
+  $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
@@ -98,7 +108,7 @@ function external_login_settings_themes() {
     '#title' => t('Theme'),
     '#required' => TRUE,
     '#options' => external_login_get_themes(),
-    '#default_value' => variable_get('external_login_theme', 'external_login_default'),
+    '#default_value' => variable_get('external_login_theme', 'external_login_dropdown'),
   );
 
   $form['#submit'][] = 'external_login_settings_themes_submit';

@@ -137,7 +137,7 @@ function external_login_block_form() {
     '#suffix' => '</div>',
   );
 
-  $form['#theme'] = variable_get('external_login_theme', 'external_login_default');
+  $form['#theme'] = variable_get('external_login_theme', 'external_login_dropdown');
 
   return $form;
 }
