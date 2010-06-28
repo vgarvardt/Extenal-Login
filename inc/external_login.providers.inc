@@ -86,6 +86,13 @@ function external_login_external_login_providers() {
       'icon' => $files_path . 'myopenid.png',
       'verify' => array('external_login_verify_openid'),
     ),
+    'vkontakteid' => array(
+      'short' => t('VKontakteID'),
+      'title' => t('VKontakte User'),
+      'path' => 'http://vkontakteid.ru',
+      'icon' => $files_path . 'openid.png',
+      'verify' => array('external_login_verify_openid'),
+    ),
   );
 }
 

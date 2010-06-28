@@ -11,11 +11,11 @@ function theme_external_login_admin_list_prepare($form) {
   $enabled = external_login_get_providers();
   $prv_enabled = $prv_disabled = array();
   foreach ($enabled as $pname => $weight) {
-    _theme_external_login_admin_list_sort_row($pname, &$form, &$prv_enabled, &$prv_disabled);
+    _theme_external_login_admin_list_sort_row($pname, $form, $prv_enabled, $prv_disabled);
     unset($providers[$pname]);
   }
   foreach ($providers as $pname => $data) {
-    _theme_external_login_admin_list_sort_row($pname, &$form, &$prv_enabled, &$prv_disabled);
+    _theme_external_login_admin_list_sort_row($pname, $form, $prv_enabled, $prv_disabled);
   }
 
   $regions = array('yes' => t('Enabled'), 'no' => t('Disabled'));
