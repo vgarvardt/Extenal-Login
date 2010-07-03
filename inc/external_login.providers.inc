@@ -45,7 +45,7 @@ function external_login_external_login_providers() {
     'yandex' => array(
       'short' => t('Yandex'),
       'title' => t('Yandex User'),
-      'path' => 'http://yandex.ru',
+      'path' => 'http://openid.yandex.ru',
       'icon' => $files_path . 'yandex.png',
       'verify' => array('external_login_verify_openid'),
     ),
