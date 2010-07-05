@@ -46,6 +46,15 @@ function external_login_menu() {
     'file' => 'inc/external_login.admin.inc',
     'weight' => $weight++,
   );
+  $items['admin/user/external_login/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('external_login_settings_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'inc/external_login.admin.inc',
+    'weight' => $weight++,
+  );
 
   return $items;
 }
@@ -190,13 +199,21 @@ function external_login_form_alter(&$form, $form_state, $form_id) {
   elseif ($form_id == 'user_register' && isset($_SESSION['openid']['values'])) {
     // if Username set by OpenID module is URL it means that provider did not return
     // valid nickname, so we should try to normalize it to get valid Drupal Username
-    if (valid_url($form['name']['#default_value'], TRUE)) {
+    // this was actual till OpenID 6.15
+    if (!empty($form['name']['#default_value']) && valid_url($form['name']['#default_value'], TRUE)) {
       $username = external_login_normalize_username($form['name']['#default_value']);
       if ($username) $form['name']['#default_value'] = $username;
     }
     elseif (empty($form['name']['#default_value'])) {
+      // starting from OpenID 6.15 identity is not set as default user name when username
+      // was not received from OpenID provider
       $username = external_login_normalize_username($form['auth_openid']['#value']);
       if ($username) $form['name']['#default_value'] = $username;
+    }
+
+    // if name is still empty, maybe we'll simply fill it with identity value (old school =))
+    if (empty($form['name']['#default_value']) && variable_get('external_login_openid_ident2name', FALSE)) {
+      $form['name']['#default_value'] = check_plain($form['auth_openid']['#value']);
     }
   }
 }

@@ -120,3 +120,15 @@ function external_login_settings_themes_submit($form, &$form_state) {
   // reset all module cache so forms should be rebuilt on first call
   cache_clear_all('external_login:', 'cache', TRUE);
 }
+
+function external_login_settings_settings() {
+  $form = array();
+
+  $form['external_login_openid_ident2name'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use OpenID identity as name when OpenID provider does not return username.'),
+    '#default_value' => variable_get('external_login_openid_ident2name', FALSE),
+  );
+
+  return system_settings_form($form);
+}
