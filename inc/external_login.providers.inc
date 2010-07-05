@@ -256,6 +256,24 @@ function external_login_normalize_yandex($value) {
 }
 
 /**
+ * Normalization function for username field for Rambler OpenID
+ *
+ * Function is useful when provider did not return Username and Drupal OpenID module
+ * uses OpenID identifier for Username
+ *
+ * @param $value
+ *   OpenID identifier string received from provider
+ * @return
+ *   Normalized username if possible or FALSE if not
+ */
+function external_login_normalize_rambler($value) {
+  if (preg_match('#http:\/\/id\.rambler\.ru\/\/users\/(.*)\/#', $value, $matches)) {
+    return $matches[1];
+  }
+  return FALSE;
+}
+
+/**
  * Check if OpenSSL installed.
  *
  * This verification required to check if providers with HTTPS schema will work properly with

@@ -8,8 +8,13 @@
  *
  */
 
-module_load_include('inc', 'external_login', 'inc/external_login.routines');
-module_load_include('inc', 'external_login', 'inc/external_login.providers');
+/**
+ * Implementation of hook_init().
+ */
+function external_login_init() {
+  module_load_include('inc', 'external_login', 'inc/external_login.routines');
+  module_load_include('inc', 'external_login', 'inc/external_login.providers');
+}
 
 /**
  * Implementation of hook_menu().
@@ -187,6 +192,10 @@ function external_login_form_alter(&$form, $form_state, $form_id) {
     // valid nickname, so we should try to normalize it to get valid Drupal Username
     if (valid_url($form['name']['#default_value'], TRUE)) {
       $username = external_login_normalize_username($form['name']['#default_value']);
+      if ($username) $form['name']['#default_value'] = $username;
+    }
+    elseif (empty($form['name']['#default_value'])) {
+      $username = external_login_normalize_username($form['auth_openid']['#value']);
       if ($username) $form['name']['#default_value'] = $username;
     }
   }
